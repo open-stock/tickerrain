@@ -21,11 +21,8 @@ from nltk.sentiment.vader import SentimentIntensityAnalyzer
 import news
 
 r = redis.Redis(
-host='localhost',
-port=6379,)
-
-r = redis.Redis(db=8)
-
+host='redis',
+port=6379,db=8)
 
 def create_pandas():
     data_all = []
@@ -66,7 +63,7 @@ def process_tickers(text):
     return list_tickers
 
 
-nlp = spacy.load("en_core_web_lg")
+nlp = spacy.load("en_core_web_sm")
 
 def sentiment(row, ret_doc=False):
     tickers_ment = row['tickers']
@@ -154,13 +151,17 @@ def processed_df():
 
 async def processing_last():
     while True:
-        last_processed, last_processed_3, last_processed_1 = processed_df()
-        print('Processing -> Storing processed Files')
-        last_processed.to_pickle('tickers_df_7.p')
-        last_processed_3.to_pickle('tickers_df_3.p')
-        last_processed_1.to_pickle('tickers_df_1.p')
-        print('Finished Processing awaiting 120secs')
-        await asyncio.sleep(120)
+        try:
+            last_processed, last_processed_3, last_processed_1 = processed_df()
+            print('Processing -> Storing processed Files')
+            last_processed.to_pickle('tickers_df_7.p')
+            last_processed_3.to_pickle('tickers_df_3.p')
+            last_processed_1.to_pickle('tickers_df_1.p')
+            print('Finished Processing awaiting 120secs')
+            await asyncio.sleep(120)
+        except:
+            print('exception... waiting for data')
+            pass
         
 
 

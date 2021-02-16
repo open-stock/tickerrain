@@ -34,11 +34,8 @@ import process
 
 
 r = redis.Redis(
-host='localhost',
-port=6379,)
-
-r = redis.Redis(db=8)
-
+host='redis',
+port=6379,db=8)
 
 app = Flask(__name__)
 
@@ -130,7 +127,7 @@ def create_figure(day=7):
 
 
 def html_last_sent():
-    nlp = spacy.load("en_core_web_lg")
+    nlp = spacy.load("en_core_web_sm")
     processed_sentence = get_last_process()
     processed_sentence['body'] = processed_sentence['body'].strip().replace("\n", "  ")
 
@@ -186,4 +183,4 @@ def index():
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host='0.0.0.0')
